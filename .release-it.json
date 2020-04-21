@@ -1,0 +1,53 @@
+{
+  "hooks": {
+    "before:init": [
+      "git checkout master",
+      "git merge develop",
+      "npm run test"
+    ],
+    "after:bump": [
+      "npm run build",
+      "npm run docs:build",
+      "npm pack"
+    ],
+    "after:release": [
+      "echo Successfully released ${name} v${version} to ${repo.repository}.",
+      "git checkout develop",
+      "git merge master",
+      "git push",
+      "rm ./*.tgz"
+    ]
+  },
+  "git": {
+    "requireBranch": "master",
+    "commit": true,
+    "commitMessage": "Release ${version}",
+    "tag": true,
+    "tagAnnotation": "Release ${version}",
+    "push": true,
+    "beforeStartCommand": false,
+    "beforeStageCommand": false,
+    "afterReleaseCommand": false
+  },
+  "npm": {
+    "publish": true,
+    "publishPath": ".",
+    "tag": null,
+    "otp": null,
+    "ignoreVersion": false,
+    "skipChecks": false
+  },
+  "github": {
+    "release": true,
+    "releaseName": "Release ${version}",
+    "releaseNotes": null,
+    "preRelease": false,
+    "draft": false,
+    "tokenRef": "GITHUB_TOKEN",
+    "assets": ["./*.tgz"],
+    "host": null,
+    "timeout": 0,
+    "proxy": null,
+    "skipChecks": false
+  }
+}

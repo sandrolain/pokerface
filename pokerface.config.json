@@ -1,0 +1,35 @@
+{
+  "threads": "auto",
+  "logs": {
+    "level": "warn",
+    "path": "./logs"
+  },
+  "server": {
+    "certs": {
+      "cert": "",
+      "key": ""
+    },
+    "protocol": "http2",
+    "port": 8888
+  },
+  "monitor": {
+    "enabled": true,
+    "interval": 15000,
+    "endpoint": "http://localhost:6060/report"
+  },
+  "rules": [{
+    "path": "/service-one/:name/*",
+    "destPath": "/:name/*",
+    "dest": "http://localhost:7070",
+    "headers": {
+      "X-Token": "{$cookies.token}"
+    }
+  }, {
+    "path": "/service-two/:name/*",
+    "destPath": "/:name/*",
+    "dest": "http://localhost:8080",
+    "query": {
+      "token": "{$cookies.token}"
+    }
+  }]
+}
