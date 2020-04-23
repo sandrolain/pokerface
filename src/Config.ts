@@ -15,6 +15,7 @@ export interface Config {
   "monitor"?: {
     "enabled": boolean;
     "interval"?: number;
+    "timeout"?: number;
     "endpoint"?: string;
   };
   "rules": {
@@ -26,3 +27,11 @@ export interface Config {
     "query"?: any;
   }[];
 }
+
+
+export const DefaultConfig = {
+  monitor: {
+    interval: 15000,
+    timeout: 1000
+  }
+};

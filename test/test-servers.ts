@@ -1,10 +1,7 @@
 import fastify from "fastify";
 
-// TODO: server 6060 for monitor endpoint
-// TODO: server 7070 for /service-one
-// TODO: server 8080 for /service-two
-
 // -------------------------------------------------
+// server 6060 for monitor endpoint
 
 const server6060 = fastify({
   logger: true
@@ -25,7 +22,9 @@ server6060.listen(6060, (err, address) => {
   console.log(`Server listening at ${address}`);
 });
 
+
 // -------------------------------------------------
+// server 7070 for /service-one
 
 const server7070 = fastify({
   logger: true
@@ -48,7 +47,9 @@ server7070.listen(7070, (err, address) => {
   console.log(`Server listening at ${address}`);
 });
 
+
 // -------------------------------------------------
+// server 8080 for /service-two
 
 const server8080 = fastify({
   logger: true

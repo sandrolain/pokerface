@@ -6,6 +6,8 @@ import { createCheckers } from "ts-interface-checker";
 import checks from "./Config-ti";
 import { Config } from "./Config";
 import { Server } from "./Server";
+import { Monitor, MonitorConnectivityResult } from "./Monitor";
+import { Message } from "./Message";
 const { Config: ConfigCheck } = createCheckers(checks);
 
 const jsonConfigFileName = "pokerface.config.json";
@@ -46,11 +48,38 @@ if(cluster.isMaster) {
     console.log(`Worker with PID ${worker.process.pid} died`);
   });
 
+  if(config.monitor && config.monitor.enabled) {
+    const monitor = new Monitor(config.monitor);
+
+    const onResult = (result: MonitorConnectivityResult): void => {
+      for(const id in cluster.workers) {
+        cluster.workers[id].send({
+          type: "monitor:result",
+          data: result
+        });
+      }
+    };
+
+    for(const rule of config.rules) {
+      monitor.addDestinationByUrl(rule.dest, onResult);
+    }
+
+    monitor.startPolling();
+  }
+
 } else {
   console.log(`Worker with PID ${process.pid} started`);
 
   // TODO: Init logger
-  // TODO: Init monitor
+  // TODO: Monitor result collector class with instance
+
+  cluster.worker.on("message", (msg: Message) => {
+    if(msg && msg.type === "monitor:result") {
+      const result = msg.data as MonitorConnectivityResult;
+      console.log("result", result)
+      Monitor.addResult(result);
+    }
+  });
 
   const server = new Server(config);
 
