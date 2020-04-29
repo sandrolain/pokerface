@@ -1,4 +1,5 @@
 import fastify from "fastify";
+import fastifyCookie from "fastify-cookie";
 
 // -------------------------------------------------
 // server 6060 for monitor endpoint
@@ -6,6 +7,8 @@ import fastify from "fastify";
 const server6060 = fastify({
   logger: true
 });
+
+server6060.register(fastifyCookie);
 
 server6060.post("/monitor", async (request) => {
   console.log("[6060]", "body", request.body);
@@ -30,12 +33,17 @@ const server7070 = fastify({
   logger: true
 });
 
+server7070.register(fastifyCookie);
+
 server7070.get("/:name/*", async (request) => {
   console.log("[7070]", "params", request.params);
   return {
     success: true,
     from: 7070,
-    params: request.params
+    params: request.params,
+    query: request.query,
+    cookies: request.cookies,
+    headers: request.headers
   };
 });
 
@@ -55,12 +63,17 @@ const server8080 = fastify({
   logger: true
 });
 
+server8080.register(fastifyCookie);
+
 server8080.get("/:name/*", async (request) => {
   console.log("[8080]", "params", request.params);
   return {
     success: true,
     from: 8080,
-    params: request.params
+    params: request.params,
+    query: request.query,
+    cookies: request.cookies,
+    headers: request.headers
   };
 });
 

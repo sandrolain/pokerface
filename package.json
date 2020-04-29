@@ -24,6 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "fastify": "^2.14.0",
+    "fastify-cookie": "^3.6.0",
     "http-proxy": "^1.18.0",
     "pino": "^6.2.1",
     "pino-pretty": "^4.0.0",
