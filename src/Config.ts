@@ -1,8 +1,11 @@
 export interface Config {
-  "threads"?: number | "auto";
+  "threads"?: {
+    "number"?: number;
+    "autorestart"?: number;
+  };
   "logs"?: {
-    "level": "debug" | "warn" | "error";
-    "path"?: string;
+    "level": "trace" | "debug" | "info" | "warn" | "error" | "fatal";
+    "pretty"?: boolean;
   };
   "server": {
     "protocol": "http" | "https" | "http2";
@@ -27,7 +30,6 @@ export interface Config {
     "query"?: any;
   }[];
 }
-
 
 export const DefaultConfig = {
   monitor: {

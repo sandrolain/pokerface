@@ -1,4 +1,4 @@
-import { Monitor, MonitorConfiguration, MonitorConnectivityResult, MonitorResultCallback } from "../src/Monitor";
+import { Monitor, MonitorConfiguration, MonitorConnectivityResult, MonitorResultCallback, MonitorStatus } from "../src/Monitor";
 
 const config: MonitorConfiguration = {
   enabled: true,
@@ -7,14 +7,15 @@ const config: MonitorConfiguration = {
   timeout: 500
 };
 
-const monitor = new Monitor(config);
+const monitorStatus = new MonitorStatus();
+const monitor       = new Monitor(config, monitorStatus);
 
 const callback: MonitorResultCallback = (result: MonitorConnectivityResult) => {
   console.log("result", result);
 };
 
-monitor.addDestination("http://localhost:6060", callback);
-monitor.addDestination("https://localhost:7070", callback);
-monitor.addDestination("http://localhost:8080", callback);
+monitor.addDestinationByUrl("http://localhost:6060", callback);
+monitor.addDestinationByUrl("https://localhost:7070", callback);
+monitor.addDestinationByUrl("http://localhost:8080", callback);
 
 monitor.startPolling();

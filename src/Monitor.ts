@@ -32,7 +32,8 @@ export class Monitor {
   private interval: NodeJS.Timeout;
 
   constructor (
-    private config: MonitorConfiguration
+    private config: MonitorConfiguration,
+    private status: MonitorStatus
   ) {}
 
   startPolling (): void {
@@ -56,7 +57,7 @@ export class Monitor {
     for(const destination of this.destinations) {
       this.verifyDestinationConnectivity(destination, this.config.timeout || DefaultConfig.monitor.timeout)
         .then((result: MonitorConnectivityResult) => {
-          Monitor.addResult(result);
+          this.status.addResult(result);
           destination.callback(result);
         }, (error: Error) => {
           console.error(error);
@@ -104,14 +105,17 @@ export class Monitor {
       port
     };
   }
+}
 
-  static getDestinationKey (destination: MonitorDestination): string {
+
+export class MonitorStatus {
+  private resultsCache: Map<string, MonitorConnectivityResult> = new Map();
+
+  getDestinationKey (destination: MonitorDestination): string {
     return `${destination.hostname}:${destination.port}`;
   }
 
-  static resultsCache: Map<string, MonitorConnectivityResult> = new Map();
-
-  static addResult (result: MonitorConnectivityResult): void {
+  addResult (result: MonitorConnectivityResult): void {
     const key = this.getDestinationKey({
       hostname: result.hostname,
       port: result.port
@@ -119,8 +123,8 @@ export class Monitor {
     this.resultsCache.set(key, result);
   }
 
-  static addResultForUrl (destinationUrl: string, info: MonitorResultInfo): void {
-    const destination = this.parseDestinationUrl(destinationUrl);
+  addResultForUrl (destinationUrl: string, info: MonitorResultInfo): void {
+    const destination = Monitor.parseDestinationUrl(destinationUrl);
     this.addResult({
       hostname: destination.hostname,
       port: destination.port,
@@ -128,7 +132,7 @@ export class Monitor {
     });
   }
 
-  static connectivityAvailable (destination: MonitorDestination): number {
+  connectivityAvailable (destination: MonitorDestination): number {
     const key = this.getDestinationKey(destination);
     if(this.resultsCache.has(key)) {
       return this.resultsCache.get(key).success ? 1 : 0;
@@ -136,8 +140,8 @@ export class Monitor {
     return -1;
   }
 
-  static connectivityAvailableByUrl (destinationUrl: string): number {
-    const destination = this.parseDestinationUrl(destinationUrl);
+  connectivityAvailableByUrl (destinationUrl: string): number {
+    const destination = Monitor.parseDestinationUrl(destinationUrl);
     return this.connectivityAvailable(destination);
   }
 }

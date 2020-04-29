@@ -5,10 +5,13 @@ import * as t from "ts-interface-checker";
 // tslint:disable:object-literal-key-quotes
 
 export const Config = t.iface([], {
-  "threads": t.opt(t.union("number", t.lit("auto"))),
+  "threads": t.opt(t.iface([], {
+    "number": t.opt("number"),
+    "autorestart": t.opt("number"),
+  })),
   "logs": t.opt(t.iface([], {
-    "level": t.union(t.lit("debug"), t.lit("warn"), t.lit("error")),
-    "path": t.opt("string"),
+    "level": t.union(t.lit("trace"), t.lit("debug"), t.lit("info"), t.lit("warn"), t.lit("error"), t.lit("fatal")),
+    "pretty": t.opt("boolean"),
   })),
   "server": t.iface([], {
     "protocol": t.union(t.lit("http"), t.lit("https"), t.lit("http2")),
@@ -21,6 +24,7 @@ export const Config = t.iface([], {
   "monitor": t.opt(t.iface([], {
     "enabled": "boolean",
     "interval": t.opt("number"),
+    "timeout": t.opt("number"),
     "endpoint": t.opt("string"),
   })),
   "rules": t.array(t.iface([], {

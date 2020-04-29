@@ -1,8 +1,11 @@
 {
-  "threads": "auto",
+  "threads": {
+    "number": 2,
+    "autorestart": 5000
+  },
   "logs": {
-    "level": "warn",
-    "path": "./logs"
+    "level": "info",
+    "pretty": true
   },
   "server": {
     "certs": {
@@ -18,15 +21,15 @@
     "endpoint": "http://localhost:6060/report"
   },
   "rules": [{
-    "path": "/service-one/:name/*",
-    "destPath": "/:name/*",
+    "path": "/service-one/*",
+    "destPath": "/*/service",
     "dest": "http://localhost:7070",
     "headers": {
       "X-Token": "{$cookies.token}"
     }
   }, {
-    "path": "/service-two/:name/*",
-    "destPath": "/:name/*",
+    "path": "/service-two/:name",
+    "destPath": "/:name/service",
     "dest": "http://localhost:8080",
     "query": {
       "token": "{$cookies.token}"

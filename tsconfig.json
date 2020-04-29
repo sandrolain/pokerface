@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "ES2015",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": false,
