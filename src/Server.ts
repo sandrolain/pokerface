@@ -4,10 +4,9 @@ import { Config } from "./Config";
 import { Rule } from "./Rules";
 import { MonitorStatus } from "./Monitor";
 import { Logger } from "./Logger";
-import { getPathMatcher, getPathParamsApplier } from "./Path";
+import { getPathParamsApplier } from "./Path";
 
 export class Server {
-
   constructor (
     private config: Config,
     private monitorStatus: MonitorStatus,
@@ -24,8 +23,6 @@ export class Server {
     });
 
     config.rules.forEach((rule: Rule): void => {
-
-      const matchPath   = getPathMatcher(rule.path);
       const applyParams = getPathParamsApplier(rule.destPath);
 
       httpServer.route({
