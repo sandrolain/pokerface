@@ -1,4 +1,4 @@
-
+// TODO: use function from TOOLS
 export type PathParams = Record<string, string>;
 export type PathMatcherFunction = (path: string) => PathParams | false;
 export type PathApplierFunction = (params: PathParams) => string;
